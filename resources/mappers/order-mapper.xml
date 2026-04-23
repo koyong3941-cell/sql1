@@ -4,6 +4,19 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="order-mapper">
+<resultMap id="orderResultMap" type="Order">
+    <id     property="orderNo"    column="ORDER_NO"/>
+    <result property="memberNo"   column="MEMBER_NO"/>
+    <result property="menuNo"     column="MENU_NO"/>
+    <result property="quantity"   column="QUANTITY"/>
+    <result property="orderDate"  column="ORDER_DATE"/>
+    <result property="status"     column="STATUS"/>
+    <!-- JOIN 결과 -->
+    <result property="memberName" column="MEMBER_NAME"/>
+    <result property="restName"   column="REST_NAME"/>
+    <result property="menuName"   column="MENU_NAME"/>
+    <result property="price"      column="PRICE"/>
+</resultMap>
 <insert id="insertOrder" parameterType="order">
  INSERT
 	INTO
@@ -26,18 +39,7 @@ FROM
 WHERE
 	MENU_NO = #{menuNo}
 </select>
-<select id="selectDetail" resultType="int">
-SELECT
-	MENU_NO
-	,MENO_NAME
-	,PRICE
-	CASE WHEN SOLD_OUT = 'Y' THEN 1 ELSE 0 END AS soldOut
-FROM
-	MENU
-WHERE
-	REST_NO = #{restNo}
-</select>
-<select id ="selectMyOrder" resultType="order">
+<select id ="selectMyOrder" resultMap="orderResultMap">
 SELECT
 	ors.ORDER_NO
 	,res.REST_NAME
@@ -47,14 +49,27 @@ SELECT
 	,me.PRICE
 	,res.DELIVERY_FEE	
 FROM
-DELI_MEMBER deli
+	DELI_MEMBER deli
 LEFT OUTER JOIN ORDERS ors
-ON deli.MEMBER_NO = ors.MEMBER_NO
+	ON deli.MEMBER_NO = ors.MEMBER_NO
 LEFT OUTER JOIN MENU me
-ON ors.MENU_NO = me.MENU_NO
+	ON ors.MENU_NO = me.MENU_NO
 LEFT OUTER JOIN RESTAURANT res
-ON me.REST_NO = res.REST_NO
+	ON me.REST_NO = res.REST_NO
 WHERE
-deli.MEMBER_NO = #{memberNo}
+	deli.MEMBER_NO = #{memberNo}
+ORDER
+BY
+ors.ORDER_NO DESC
 </select>
+<update id = "orderCancel" parameterType="order">
+UPDATE 
+	ORDERS
+SET 
+	STATUS = '주문취소'
+WHERE 
+	ORDER_NO = #{orderNo}
+AND 
+	STATUS = '주문접수'
+</update>
 </mapper>

@@ -20,7 +20,11 @@ public class OrderDao {
 	}
 	
 	public int selectSoldout(SqlSession session, int restNo) {
-	    return session.selectOne("order-mapper.checkSoldOut", restNo);
+	    return session.selectOne("order-mapper.selectSoldout", restNo);
+	}
+	
+	public int orderCancel(SqlSession session, int order) {
+		return session.update("order-mapper.orderCancel", order);
 	}
 
 }

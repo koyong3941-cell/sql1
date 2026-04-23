@@ -7,7 +7,6 @@ public class MenuVo {
 	private int price;
 	private boolean soldOut;// 쿼리 단에서 처리 예정
 	
-	
 	@Override
 	public String toString() {
 		return "MenuVo [menuNo=" + menuNo + ", restNo=" + restNo + ", menuName=" + menuName + ", price=" + price
@@ -30,7 +29,7 @@ public class MenuVo {
 		return price;
 	}
 
-	public boolean soldOut() {
+	public boolean isSoldOut() {
 		return soldOut;
 	}
 	

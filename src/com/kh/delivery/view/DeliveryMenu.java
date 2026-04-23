@@ -87,7 +87,7 @@ public class DeliveryMenu {
 				}
 		}
 		
-		private void userMenu() { //유저  > 코드 검색용 키워드(사용빈도 높고 항상 찾기 넘 귀찮)
+		private void userMenu() { //유저  > 유저 메뉴 메서드 검색용 키워드
 			System.out.println("안녕하세요, " + userGetName.getMemberName() +"님 KH 배달 서비스입니다, 하단의 메뉴에서 선택해주세요.");
 			System.out.println("1. 전체 가게 목록 조회하기\n2. 카테고리 별 검색하기\n3. 가게 별 메뉴 조회\n4. 주문하기\n5. 주문 내역\n6. 주문 취소하기\n9. 로그아웃");
 			int menu = sc.nextInt();
@@ -99,7 +99,7 @@ public class DeliveryMenu {
 			case 3 -> selectDetail();
 			case 4 -> insertOrder();
 			case 5 -> selectMyOrder();
-			case 6 -> orderCancle();
+			case 6 -> orderCancel();
 			case 9 -> {System.out.println(userGetName.getMemberName() + "님의 계정 로그아웃을 실행합니다."); mainMenu();}
 			default -> System.out.println("잘못된 접근입니다.");
 			}
@@ -134,6 +134,7 @@ public class DeliveryMenu {
 					case 2 -> selectAllRestaurant();
 					case 9 -> sc.close();
 					default -> System.out.println("잘못된 접근입니다.");}
+					
 				} else if(userGetName.getMemberId() != null) { // 회원
 					switch(tryNum) { 
 					case 1 -> userMenu(); 
@@ -178,7 +179,7 @@ public class DeliveryMenu {
 					System.out.println("조회된 결과가 없습니다. \n회원 메인 화면으로 이동합니다.");
 					selectLogin();
 				}
-				else {
+				else  {
 					for(RestaurantVo resVo : restaurantList) {
 						System.out.println("#"+resVo.getRestNo()
 						+ " 가게명: " + resVo.getRestName()
@@ -207,49 +208,32 @@ public class DeliveryMenu {
 		}
 		
 		private void selectDetail() {
-			selectAllRestaurantProxy();
-			boolean soldOut;
-			String menu = null;
-			int restNo = 0;
-			
-			System.out.println("조회된 결과에서 가게를 선택해주세요: ");
-			menu = sc.nextLine();
-			
-			switch(menu) { 
-			case "1" -> restNo = 1;
-			case "2" -> restNo = 2;
-			case "3" -> restNo = 3;
-			case "4" -> restNo = 4;
-			case "5" -> restNo = 5;
-			default -> System.out.println("잘못된 접근입니다.");}
-			
-			List<MenuVo> menuList = restaurantController.selectDetail(restNo);
-			
-			soldOut = orderController.selectSoldout(restNo);
-			
-			if(menuList.isEmpty()) {
-				System.out.println("조회된 결과가 없습니다. \n회원 메인 화면으로 이동합니다.");
-				selectLogin();
-				}
-			else {
-				
-				
-				
-			/*for(MenuVo menuVo : menuList) {
-				if(soldOut) {
-					System.out.println("#" + menuVo.getMenuNo()
-					+ " 메뉴명: " + menuVo.getMenuName()
-					+ " 가격: " + menuVo.getPrice()
-					+ " 매진 여부 : " + "판매 소진");
-					}
-				else {
-					System.out.println("#"+ menuVo.getMenuNo()
-					+ " 메뉴명: " + menuVo.getMenuName()
-					+ " 가격: " + menuVo.getPrice()
-					+ " 매진 여부 : " + "판매 중");
-					}
-				}*/
-			}
+		    selectAllRestaurantProxy();
+		    String menu = null;
+		    int restNo = 0;
+		    
+		    System.out.println("조회된 결과에서 가게를 선택해주세요: ");	   
+		    
+			    try {
+			    restNo = Integer.parseInt(sc.nextLine());}
+			    catch(NumberFormatException e) {
+			    	System.out.print("잘못된 입력입니다.");
+			    }
+			    
+		    List<MenuVo> menuList = restaurantController.selectDetail(restNo);	    
+		    if(menuList.isEmpty()) {
+		        System.out.println("조회된 결과가 없습니다. \n회원 메인 화면으로 이동합니다.");
+		        selectLogin();
+		        return;
+		    }
+		    
+		    for(MenuVo menuVo : menuList) {
+		        String status = menuVo.isSoldOut() ? "판매 소진" : "판매 중";
+		        System.out.println("#" + menuVo.getMenuNo()
+		            + " 메뉴명: " + menuVo.getMenuName()
+		            + " 가격: " + menuVo.getPrice()
+		            + " 매진 여부 : " + status);
+		    }
 		}
 		
 		private void insertOrder() {
@@ -270,7 +254,7 @@ public class DeliveryMenu {
 			        System.out.println("해당 메뉴는 현재 판매 소진되어 구매가 불가능합니다.");
 			        return;
 			    }
-	
+				else {
 				order.setMenuNo(menuNo);
 				order.setQuantity(quantity);
 			
@@ -285,7 +269,7 @@ public class DeliveryMenu {
 						userMenu();
 					} else {
 						System.out.println("주문 실패");	
-						selectLogin();
+						selectLogin();}
 				}	
 		}
 		
@@ -293,7 +277,6 @@ public class DeliveryMenu {
 			OrderDto order = new OrderDto();
 			if (userGetName.getMemberId() != null) {
 		        int userNo = userGetName.getMemberNo(); 
-		        sc.nextLine();
 		        order.setMemberNo(userNo); //오더Dto에 유저넘 넣기
 
 			List<OrderDto> myOrderList = orderController.selectMyOrder(userNo);
@@ -315,22 +298,27 @@ public class DeliveryMenu {
 						}
 					}
 		
-		public void orderCancle() { //주문번호와 내 회원키가 일치하는 주문에 대해서만 업데이트 처리가 가능해야함.
+		public void orderCancel() { //주문번호와 내 회원키(static으로 띄움)가 일치하는 주문에 대해서만 업데이트 처리가 가능해야함.
+			if(userGetName == null) {
+				System.out.println("잘못된 접근입니다.");
+			}
+			
+			int orderNo = 0;
 			selectMyOrder();
-			System.out.println("취소할 주문의 번호를 입력해주세요.");
+			System.out.print("취소할 주문의 번호를 입력해주세요, [주문접수] 상태의 주문 만 가능합니다: ");
+			orderNo = sc.nextInt();
+			sc.nextLine();
 			
-			// OrderDto order = selectOrder();
-					
-			// return order;
+			int result = orderController.orderCancel(orderNo);
+			
+			if(result>0) {
+				System.out.println("주문 취소 성공, 영업일 기준 7일 이내에 환불이 진행됩니다.");
+			} else {
+				System.out.println("주문 취소 실패, 주문접수 상태가 아닙니다.");
+			}
 		}
 		
-		//public selectOrder() {
-			
-		//}
 		
-		public void logout() {
-			
-		}
 		
 
 }

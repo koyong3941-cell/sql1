@@ -8,10 +8,10 @@ import com.kh.delivery.dto.DeliMemberDto;
 
 
 public class MemberService {
-	SqlSession session = new Template().getSqlConnection(); 
 	MemberDao memberDao = new MemberDao();
 	
 	public int signUp(DeliMemberDto memberDto) {
+		SqlSession session = new Template().getSqlConnection(); 
 		int result =0;
 			try {
 				result = memberDao.signUp(session, memberDto);
@@ -22,17 +22,20 @@ public class MemberService {
 				} 
 		if(result >0) {
 			session.commit();
-		}
+			session.close();
+		}	session.rollback();
 			session.close();
 		return result;
 	}
 	
 	public DeliMemberDto selectLogin(DeliMemberDto memberDto) {
+		SqlSession session = new Template().getSqlConnection(); 
 		DeliMemberDto LoginResult = null;
 		try {
 			LoginResult = memberDao.selectLogin(session, memberDto);
 			}catch(Exception e) {
 			System.out.println("잘못된 접근입니다.");
+			session.close();
 			return null;
 		}
 		return LoginResult;

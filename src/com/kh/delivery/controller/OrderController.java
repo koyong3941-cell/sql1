@@ -24,5 +24,10 @@ public class OrderController {
 	public boolean selectSoldout(int restNo) {
 		return orderService.selectSoldout(restNo);
 	}
+	
+	public int orderCancel(int orderNo) {
+		return orderService.orderCancel(orderNo);
+		
+	}
 
 }

@@ -41,18 +41,24 @@
    	 	RESTAURANT
 </select>
 <select id="selectDetail" resultType="menu">
-    SELECT
-	    MENU_NO
-	    ,MENU_NAME
-	    ,REST_NO
-	    ,PRICE,
-	CASE 
-    	WHEN SOLD_OUT = 'Y' THEN 1
-    	ELSE 0 
-    	END AS SOLD_OUT_NOW
-    FROM
-   	 	MENU
-   	WHERE
-   	 	REST_NO = #{restNo}
+SELECT
+	MENU_NO
+	,MENU_NAME
+	,REST_NO
+	,PRICE
+	,CASE WHEN SOLD_OUT = 'Y' THEN 1 ELSE 0 END AS soldOut FROM MENU
+WHERE
+	REST_NO = #{restNo}
+</select>
+<select id="selectSoldout" resultType="menu">
+SELECT
+	MENU_NO
+	,MENU_NAME
+	,PRICE
+	,CASE WHEN SOLD_OUT = 'Y' THEN 1 ELSE 0 END AS soldOut
+FROM
+	MENU
+WHERE
+	REST_NO = #{restNo}
 </select>
 </mapper>

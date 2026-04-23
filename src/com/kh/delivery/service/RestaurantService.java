@@ -11,9 +11,9 @@ import com.kh.delivery.vo.RestaurantVo;
 
 public class RestaurantService {
 	RestaurantDao restaurantDao = new RestaurantDao();
-	SqlSession session = Template.getSqlConnection();
 		
 	public List<RestaurantVo> selectAllRestaurant(){
+		SqlSession session = Template.getSqlConnection();
 		List<RestaurantVo> restaurantList = restaurantDao.selectAllRestaurant(session);
 			if(restaurantList == null) {
 				System.out.println("비정상적인 접근입니다.");
@@ -23,6 +23,7 @@ public class RestaurantService {
 	}
 	
 	public List<RestaurantVo> selectByCategory(String category) {
+		SqlSession session = Template.getSqlConnection();
 		List<RestaurantVo> restaurantList = restaurantDao.selectByCategory(session, category);
 			if(restaurantList == null) {
 				System.out.println("비정상적인 접근입니다.");
@@ -32,6 +33,7 @@ public class RestaurantService {
 	}
 	
 	public List<RestaurantVo> selectAllRestaurantProxy() {
+		SqlSession session = Template.getSqlConnection();
 		List<RestaurantVo> restaurantList = restaurantDao.selectAllRestaurantProxy(session);
 			if(restaurantList == null) {
 				System.out.println("비정상적인 접근입니다.");
@@ -41,6 +43,7 @@ public class RestaurantService {
 	}
 	
 	public List<MenuVo> selectDetail(int restNo) {
+		SqlSession session = Template.getSqlConnection();
 		List<MenuVo> menuList = restaurantDao.selectDetail(session, restNo);
 			if(menuList == null) {
 				System.out.println("비정상적인 접근입니다.");
@@ -48,6 +51,17 @@ public class RestaurantService {
 					}
 				return menuList;
 	}
+	
+	public boolean checkSoldOut(int restNo) {
+		SqlSession session = Template.getSqlConnection();
+	    int menu = restaurantDao.checkSoldOut(session, restNo);
+	    if (menu>0) {
+	        return menu == 1; 
+	    }
+	    return menu == 0;
+	}
+	
+	
 			
 }
 

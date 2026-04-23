@@ -24,4 +24,8 @@ public class RestaurantController {
 	public List<MenuVo> selectDetail(int restNo){
 		return restaurantService.selectDetail(restNo);
 	}
+	
+	public boolean checkSoldOut(int restNo) {
+		return restaurantService.checkSoldOut(restNo);
+	}
 }

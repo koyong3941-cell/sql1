@@ -25,4 +25,8 @@ public class RestaurantDao {
 		return session.selectList("restaurant-mapper.selectDetail", restNo);
 	}
 	
+	public int checkSoldOut(SqlSession session, int restNo){
+		return session.selectOne("restaurant-mapper.checkSoldOut", restNo);
+	}
+	
 }
