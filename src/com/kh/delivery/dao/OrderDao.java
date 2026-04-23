@@ -1,6 +1,8 @@
 package com.kh.delivery.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -23,8 +25,12 @@ public class OrderDao {
 	    return session.selectOne("order-mapper.selectSoldout", restNo);
 	}
 	
-	public int orderCancel(SqlSession session, int order) {
-		return session.update("order-mapper.orderCancel", order);
+	public int orderCancel(SqlSession session, int orderNo, int memberNo) {
+		Map<String, Object> para = new HashMap<>();
+		para.put("orderNo", orderNo);
+		para.put("memberNo", memberNo);
+		
+		return session.update("order-mapper.orderCancel", para);
 	}
 
 }

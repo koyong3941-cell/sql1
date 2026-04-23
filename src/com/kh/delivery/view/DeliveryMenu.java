@@ -286,6 +286,10 @@ public class DeliveryMenu {
 				} else {
 						System.out.println(userGetName.getMemberName()+ "님의" +" 주문 내역 목록입니다.");
 						for(OrderDto ordto : myOrderList) {
+							if (ordto == null || ordto.getOrderNo() ==0) { // npe 방어 로직, 없으면 터짐
+								System.out.println("조회된 결과가 없습니다.");
+								return; 
+					        }
 							System.out.println("주문번호: " + ordto.getOrderNo()
 							+ " 가게명: " + ordto.getRestName()
 							+ " 메뉴명: " + ordto.getMenuName()
@@ -309,12 +313,12 @@ public class DeliveryMenu {
 			orderNo = sc.nextInt();
 			sc.nextLine();
 			
-			int result = orderController.orderCancel(orderNo);
+			int result = orderController.orderCancel(orderNo , userGetName.getMemberNo());
 			
 			if(result>0) {
 				System.out.println("주문 취소 성공, 영업일 기준 7일 이내에 환불이 진행됩니다.");
 			} else {
-				System.out.println("주문 취소 실패, 주문접수 상태가 아닙니다.");
+				System.out.println("주문 취소 실패, [주문접수] 상태가 아니거나 잘못된 주문번호입니다..");
 			}
 		}
 		

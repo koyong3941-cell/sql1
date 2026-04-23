@@ -25,8 +25,8 @@ public class OrderController {
 		return orderService.selectSoldout(restNo);
 	}
 	
-	public int orderCancel(int orderNo) {
-		return orderService.orderCancel(orderNo);
+	public int orderCancel(int orderNo, int memberNo) {
+		return orderService.orderCancel(orderNo, memberNo);
 		
 	}
 

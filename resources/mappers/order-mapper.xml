@@ -62,13 +62,15 @@ ORDER
 BY
 ors.ORDER_NO DESC
 </select>
-<update id = "orderCancel" parameterType="order">
+<update id = "orderCancel" parameterType="map">
 UPDATE 
 	ORDERS
 SET 
 	STATUS = '주문취소'
 WHERE 
 	ORDER_NO = #{orderNo}
+AND
+	MEMBER_NO = #{memberNo}
 AND 
 	STATUS = '주문접수'
 </update>

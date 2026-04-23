@@ -56,9 +56,9 @@ public class OrderService {
 	    return menu == 0;
 	}
 	
-	public int orderCancel(int order) {
+	public int orderCancel(int orderNo, int memberNo) {
 		SqlSession session = Template.getSqlConnection();
-		int cancelAction = orderDao.orderCancel(session, order);
+		int cancelAction = orderDao.orderCancel(session, orderNo, memberNo);
 		
 		if(cancelAction > 0) {
 			session.commit();
