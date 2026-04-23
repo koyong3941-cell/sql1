@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="member-mapper">
+<insert id="signUp" parameterType="member">
+ INSERT
+	INTO
+		DELI_MEMBER
+	VALUES
+		(
+		SEQ_MEMBER_NO.NEXTVAL
+		, #{memberId}
+		, #{memberPw}
+		, #{memberName}
+		, #{address}
+		, SYSDATE
+		)
+</insert>
+<select id="selectLogin" resultType="member">
+    SELECT
+    MEMBER_NO
+    ,MEMBER_ID
+    ,MEMBER_PW
+    ,MEMBER_NAME
+    ,ADDRESS
+    ,ENROLL_DATE
+    FROM
+    DELI_MEMBER
+    WHERE
+    	MEMBER_ID = #{memberId}
+    AND
+    	MEMBER_PW = #{memberPw}
+</select>
+</mapper>

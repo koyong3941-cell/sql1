@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="order-mapper">
+<insert id="insertOrder" parameterType="order">
+ INSERT
+	INTO
+		ORDERS
+	VALUES
+		(
+		SEQ_ORDER_NO.NEXTVAL
+		, #{memberNo}
+		, #{menuNo}
+		, #{quantity}
+		, SYSDATE
+		, '주문접수'
+		)
+</insert>
+<select id="checkSoldOut" resultType="int">
+SELECT
+	CASE WHEN SOLD_OUT = 'Y' THEN 1 ELSE 0 END AS soldOut
+FROM
+	MENU
+WHERE
+	MENU_NO = #{menuNo}
+</select>
+<select id="selectDetail" resultType="int">
+SELECT
+	MENU_NO
+	,MENO_NAME
+	,PRICE
+	CASE WHEN SOLD_OUT = 'Y' THEN 1 ELSE 0 END AS soldOut
+FROM
+	MENU
+WHERE
+	REST_NO = #{restNo}
+</select>
+<select id ="selectMyOrder" resultType="order">
+SELECT
+	ors.ORDER_NO
+	,res.REST_NAME
+	,me.MENU_NAME
+	,ors.QUANTITY
+	,ors.STATUS
+	,me.PRICE
+	,res.DELIVERY_FEE	
+FROM
+DELI_MEMBER deli
+LEFT OUTER JOIN ORDERS ors
+ON deli.MEMBER_NO = ors.MEMBER_NO
+LEFT OUTER JOIN MENU me
+ON ors.MENU_NO = me.MENU_NO
+LEFT OUTER JOIN RESTAURANT res
+ON me.REST_NO = res.REST_NO
+WHERE
+deli.MEMBER_NO = #{memberNo}
+</select>
+</mapper>
