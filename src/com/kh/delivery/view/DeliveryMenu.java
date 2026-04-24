@@ -116,11 +116,10 @@ public class DeliveryMenu {
 				}
 				else {
 				for(RestaurantVo resVo : restaurantList) {
-					System.out.println("#"+resVo.getRestNo()
-					+ " 가게명: " + resVo.getRestName()
-					+ " 카테고리: " + resVo.getCategory()
-					+ " 최소 주문 가격: " +resVo.getMinPrice()
-					+ " 배달비: " +resVo.getDeliveryFee());
+					String outPut = "번호:%d | 가게명:%s | 카테고리:%s | 최소 주문 가격:%,d원 | 배달비:%,d원".formatted(resVo.getRestNo(),resVo.getRestName(),
+							resVo.getCategory(),resVo.getMinPrice(),resVo.getDeliveryFee());
+					
+					System.out.println(outPut);
 					}
 				}
 			
@@ -181,11 +180,19 @@ public class DeliveryMenu {
 				}
 				else  {
 					for(RestaurantVo resVo : restaurantList) {
-						System.out.println("#"+resVo.getRestNo()
+						/* System.out.println("#"+resVo.getRestNo()
 						+ " 가게명: " + resVo.getRestName()
 						+ " 카테고리: " + resVo.getCategory()
 						+ " 최소 주문 가격: " + resVo.getMinPrice()
-						+ " 배달비: " + resVo.getDeliveryFee());
+						+ " 배달비: " + resVo.getDeliveryFee()); */
+						//"주문번호:%2d | 가게명:%-5s\t| 메뉴명:%-6s\t| 수량:%d개 | 주문가격:%,8d원 | 총액:%,8d원 | 상태:%s"
+						String search = "번호:%2d | 가게명: %-5s | 카테고리: %s | 최소주문: %,d원 | 배달비: %,d원".formatted(resVo.getRestNo(), 
+	                               resVo.getRestName(), 
+	                               resVo.getCategory(), 
+	                               resVo.getMinPrice(), 
+	                               resVo.getDeliveryFee());
+						
+						System.out.println(search);
 						}
 					}
 				}
@@ -198,11 +205,9 @@ public class DeliveryMenu {
 				}
 			else {
 			for(RestaurantVo resVo : restaurantList) {
-				System.out.println("#"+resVo.getRestNo()
-				+ " 가게명: " + resVo.getRestName()
-				+ " 카테고리: " + resVo.getCategory()
-				+ " 최소 주문 가격: " + resVo.getMinPrice()
-				+ " 배달비: " + resVo.getDeliveryFee());
+				String outPut = "번호:%d | 가게명:%s | 카테고리:%s | 최소 주문 가격:%,d원 | 배달비:%,d원".formatted(resVo.getRestNo(),resVo.getRestName(),
+						resVo.getCategory(),resVo.getMinPrice(),resVo.getDeliveryFee());
+				System.out.println(outPut);
 				}
 			}
 		}
@@ -222,16 +227,16 @@ public class DeliveryMenu {
 		    List<MenuVo> menuList = restaurantController.selectDetail(restNo);	    
 		    if(menuList.isEmpty()) {
 		        System.out.println("조회된 결과가 없습니다. \n회원 메인 화면으로 이동합니다.");
-		        selectLogin();
+		        userMenu();
 		        return;
 		    }
-		    
+		    //"주문번호:%2d | 가게명:%-5s\t| 메뉴명:%-6s\t| 수량:%d개 | 주문가격:%,8d원 | 총액:%,8d원 | 상태:%s"
 		    for(MenuVo menuVo : menuList) {
 		        String status = menuVo.isSoldOut() ? "판매 소진" : "판매 중";
-		        System.out.println("#" + menuVo.getMenuNo()
-		            + " 메뉴명: " + menuVo.getMenuName()
-		            + " 가격: " + menuVo.getPrice()
-		            + " 매진 여부 : " + status);
+		        String outPut = "번호:%2d | 메뉴명:%-6s\t| 가격:%d원 | 매진 여부:%s".formatted(menuVo.getMenuNo(),menuVo.getMenuName(),
+		        		menuVo.getPrice(),status);
+		        
+		        System.out.println(outPut);
 		    }
 		}
 		
@@ -243,33 +248,33 @@ public class DeliveryMenu {
 			System.out.print("메뉴 번호를 선택해주세요: ");
 			int menuNo =sc.nextInt();
 			sc.nextLine();
-			System.out.print("수량을 선택해주세요: ");
-			int quantity =sc.nextInt();
-			sc.nextLine();
 			
 			boolean isSoldOut = orderController.checkSoldOut(menuNo);
-			
 				if (isSoldOut) {
 			        System.out.println("해당 메뉴는 현재 판매 소진되어 구매가 불가능합니다.");
-			        return;
+			        insertOrder();
 			    }
-				else {
-				order.setMenuNo(menuNo);
-				order.setQuantity(quantity);
-			
-					if (userGetName != null) {
-				        int userNo = userGetName.getMemberNo(); 
-				        order.setMemberNo(userNo); }
+					else {
+					System.out.print("수량을 선택해주세요: ");
+					int quantity =sc.nextInt();
+					sc.nextLine();
+								
+						order.setMenuNo(menuNo);
+						order.setQuantity(quantity);
 					
-					int result = orderController.insertOrder(order);
-					
-					if(result > 0){
-						System.out.println("주문 성공!");
-						userMenu();
-					} else {
-						System.out.println("주문 실패");	
-						selectLogin();}
-				}	
+							if (userGetName != null) {
+						        int userNo = userGetName.getMemberNo(); 
+						        order.setMemberNo(userNo); }
+							
+							int result = orderController.insertOrder(order);
+							
+							if(result > 0){
+								System.out.println("주문 성공!");
+								userMenu();
+							} else {
+								System.out.println("주문 실패");	
+								selectLogin();}
+						}	
 		}
 		
 		public void selectMyOrder() { // userGetName로 띄운 멤버 id를 바탕으로 내 주문 join 쿼리를 자동으로 띄워줘야함
@@ -289,13 +294,16 @@ public class DeliveryMenu {
 								System.out.println("조회된 결과가 없습니다.");
 								return; 
 					        }
-							System.out.println("주문번호: " + ordto.getOrderNo()
-							+ " 가게명: " + ordto.getRestName()
+							String outPut = "주문번호:%2d | 가게명:%-5s\t| 메뉴명:%-6s\t| 수량:%d개 | 주문가격:%,8d원 | 총액:%,8d원 | 상태:%s".formatted(
+									ordto.getOrderNo(), ordto.getRestName(), ordto.getMenuName(), ordto.getQuantity(),	 (ordto.getPrice()*ordto.getQuantity())
+									, (ordto.getPrice()*ordto.getQuantity()+ordto.getDeliveryFee()), ordto.getStatus());
+							System.out.println(outPut); 
+							 /*+ " 가게명: " + ordto.getRestName()
 							+ " 메뉴명: " + ordto.getMenuName()
-							+ " 수량: " + ordto.getQuantity()
+							+ " 수량: " + ordto.getQuantity()	
 							+ " 주문 가격: " +	 (ordto.getPrice()*ordto.getQuantity())					
 							+ " 총 주문 가격: " + (ordto.getPrice()*ordto.getQuantity()+ordto.getDeliveryFee())
-							+ " 주문 상태: " + ordto.getStatus()); // 가격 & 가격 * 수량 가격*수량+배달비?												
+							+ " 주문 상태: " + ordto.getStatus()); // 가격 & 가격 * 수량 가격*수량+배달비?	*/										
 								}
 					 		}	
 						}
