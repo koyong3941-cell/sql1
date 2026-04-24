@@ -56,8 +56,10 @@ public class RestaurantService {
 		SqlSession session = Template.getSqlConnection();
 	    int menu = restaurantDao.checkSoldOut(session, restNo);
 	    if (menu>0) {
+	    	session.close();
 	        return menu == 1; 
 	    }
+	    session.close();
 	    return menu == 0;
 	}
 	

@@ -54,12 +54,12 @@ public class DeliveryMenu {
 			int result = memberController.signUp(new DeliMemberDto(memberId, memberPw, memberName, address));
 			
 			if(result > 0) {
-				System.out.println("아이디 등록 성공!");	
-				selectLogin(); // 검증 완료 시 회원페이지 랜딩
+				System.out.println("아이디 등록 성공!, 로그인 페이지로 진입합니다.");	
+				selectLogin(); // 검증 완료 시 로그인 페이지 랜딩
 			}
 			else {
 				System.out.println("아이디 등록 실패!");	
-				mainMenu(); // 검증 실패 시 로그인 페이지로 튕겨냄 
+				mainMenu(); // 검증 실패 시 회원 페이지로 튕겨냄 
 			}
 		}
 
@@ -212,8 +212,7 @@ public class DeliveryMenu {
 		    String menu = null;
 		    int restNo = 0;
 		    
-		    System.out.println("조회된 결과에서 가게를 선택해주세요: ");	   
-		    
+		    System.out.println("조회된 결과에서 가게 번호를 선택해주세요: ");	   
 			    try {
 			    restNo = Integer.parseInt(sc.nextLine());}
 			    catch(NumberFormatException e) {
@@ -314,18 +313,15 @@ public class DeliveryMenu {
 			sc.nextLine();
 			
 			int result = orderController.orderCancel(orderNo , userGetName.getMemberNo());
-			
-			if(result>0) {
-				System.out.println("주문 취소 성공, 영업일 기준 7일 이내에 환불이 진행됩니다.");
-			} else {
-				System.out.println("주문 취소 실패, [주문접수] 상태가 아니거나 잘못된 주문번호입니다..");
+				
+				if(result>0) {
+					System.out.println("주문 취소 성공, 영업일 기준 7일 이내에 환불이 진행됩니다.");
+				} else {
+					System.out.println("주문 취소 실패, [주문접수] 상태가 아니거나 잘못된 주문번호입니다..");
+				}
 			}
-		}
-		
-		
-		
-
-}
+			
+	}
 
 		
 

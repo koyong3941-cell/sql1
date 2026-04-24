@@ -5,10 +5,10 @@
   
 <mapper namespace="member-mapper">
 <insert id="signUp" parameterType="member">
- INSERT
+INSERT
 	INTO
 		DELI_MEMBER
-	VALUES
+VALUES
 		(
 		SEQ_MEMBER_NO.NEXTVAL
 		, #{memberId}
@@ -19,7 +19,7 @@
 		)
 </insert>
 <select id="selectLogin" resultType="member">
-    SELECT
+SELECT
     MEMBER_NO
     ,MEMBER_ID
     ,MEMBER_PW

@@ -17,7 +17,7 @@ public class MemberController {
 			view.mainMenu();}
 		catch(InputMismatchException e){
 			System.out.println("잘못된 입력 값 입니다.");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 	

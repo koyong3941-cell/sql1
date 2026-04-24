@@ -31,13 +31,14 @@ public class MemberService {
 	public DeliMemberDto selectLogin(DeliMemberDto memberDto) {
 		SqlSession session = new Template().getSqlConnection(); 
 		DeliMemberDto LoginResult = null;
-		try {
-			LoginResult = memberDao.selectLogin(session, memberDto);
-			}catch(Exception e) {
-			System.out.println("잘못된 접근입니다.");
-			session.close();
-			return null;
+			try {
+				LoginResult = memberDao.selectLogin(session, memberDto);
+				}catch(Exception e) {
+				System.out.println("잘못된 접근입니다.");
+				session.close();
+				return null;
 		}
+			session.close();
 		return LoginResult;
 	}
 
